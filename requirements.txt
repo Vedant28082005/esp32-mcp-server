@@ -2,3 +2,4 @@ mcp[cli]
 requests
 uvicorn
 starlette
+python-dotenv

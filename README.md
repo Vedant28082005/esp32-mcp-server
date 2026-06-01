@@ -2,7 +2,19 @@
 
 MCP server that controls an ESP32 board over HTTP (LED on/off/status), with optional ngrok exposure for Claude.ai remote integration.
 
-## Setup
+## Firmware (ESP32)
+
+Sketch: `firmware/esp32_led_bridge/esp32_led_bridge.ino`
+
+1. Open the folder in Arduino IDE or PlatformIO.
+2. Copy `firmware/esp32_led_bridge/secrets.h.example` to `secrets.h`.
+3. Set `WIFI_SSID` and `WIFI_PASSWORD` in `secrets.h` (this file is not committed).
+4. Flash the board and note the IP printed on Serial Monitor (`115200` baud).
+5. Set that IP as `ESP32_IP` in your Python `.env`.
+
+HTTP endpoints: `/led/on`, `/led/off`, `/led/toggle`, `/led/status`
+
+## MCP server setup
 
 ```bash
 pip install -r requirements.txt
@@ -34,6 +46,8 @@ Never commit `.env`. Only `.env.example` belongs in git.
 
 ## Security
 
-- IPs, ngrok URLs, and OAuth values are loaded from environment variables.
-- Replace default OAuth secrets before exposing the server on the internet.
+- **Python:** IPs, ngrok URLs, and OAuth values live in `.env` (see `.env.example`).
+- **Firmware:** WiFi credentials live in `secrets.h` (see `secrets.h.example`). Never commit `secrets.h` or `.env`.
+- Replace default OAuth secrets before exposing the MCP server on the internet.
 - The bundled OAuth flow is a development stub, not production-grade authentication.
+- Firmware uses open CORS (`*`) for local LAN tooling only; do not expose the ESP32 HTTP server to the public internet without authentication.
